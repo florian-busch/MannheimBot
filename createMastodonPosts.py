@@ -36,7 +36,8 @@ def calculatePassedBikeNumbers():
                 for entry in data_three_days_ago.get('results'):
                     if type(entry.get('counts')) == int:
                         counter_three_days_ago += entry['counts']
-                zaehlstellen_data[entry['name']].update({'changeToDayBefore': counter_three_days_ago - counter_two_days_ago}) 
+                zaehlstellen_data[entry['name']].update({'changeToDayBefore': counter_three_days_ago - counter_two_days_ago})
+
             except ValueError:
                    print('Error processing data from queryServer')
         except ValueError as e:
@@ -52,18 +53,22 @@ def buildStatus():
     
     #access zaehlstellenData-dict via location names from zaehlstellenLocations and add counts to post
     for location in zaehlstellen_location_names:
-        post = f"{post}\n{str(location)}: {str(zaehlstellen_data[location].get('twoDaysAgo'))}. "
+        change_to_day_before = zaehlstellen_data[location].get('changeToDayBefore')
+
+        post = f"{post}\n{str(location)}: {str(zaehlstellen_data[location].get('twoDaysAgo'))} "
         
         #TO DO: data changes on server after post is done. change to day before therefor not correct. Maybe get data from recent post and calculate off of this?
         #insert change to day before in post. 
-        if zaehlstellen_data[location]['changeToDayBefore'] == 0:
+        if change_to_day_before == 0:
             post = post + 'Gleich zum Vortag.'
         # changeToDayBefore is negative -> 2 days ago less bikes were counted than 3 days before
-        elif zaehlstellen_data[location]['changeToDayBefore'] < 0:
-            post = post + " (" + '\u2197 ' + str(abs(zaehlstellen_data[location]['changeToDayBefore'])) + ')'
+        elif change_to_day_before < 0:
+            post = post + " (" + '\u2197 ' + str(abs(change_to_day_before)) + ')'
         # changeToDayBefore is positive -> 2 days ago more bikes were counted than 3 days before
-        elif zaehlstellen_data[location]['changeToDayBefore'] > 0:
-            post = post + " (" + '\u2198 ' + str(abs(zaehlstellen_data[location]['changeToDayBefore'])) + ')'
+        elif change_to_day_before > 0:
+            post = post + " (" + '\u2198 ' + str(abs(change_to_day_before)) + ')'
+        else:
+            post = post + " (??)"
     #add hashtags to post
     post = post + "\n\n#fahrrad #mannheim #verkehrswende"
     
