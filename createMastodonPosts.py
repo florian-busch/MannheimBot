@@ -6,12 +6,6 @@ zaehlstellen_locations = ["renzstr-ost-eco-counter-daten", "renzstr_west_eco-cou
 zaehlstellen_data = defaultdict(dict)
 zaehlstellen_location_names = []
 
-def createYesterdaysDate():
-    today_date = date.today()
-    yesterday_date = str(today_date - timedelta(days = 2))
-    query_date_formatted = f"{yesterday_date.split('-')[2]}.{yesterday_date.split('-')[1]}.{yesterday_date.split('-')[0]}"
-    return query_date_formatted
-
 def calculatePassedBikeNumbers():
     for location in zaehlstellen_locations:
         counter_two_days_ago = 0
@@ -49,7 +43,7 @@ def buildStatus():
     calculatePassedBikeNumbers()
     
     #create empty string which gets filled with content for post
-    post = f"Rad-Zählstellen in Mannheim, {createYesterdaysDate()}.\n"
+    post = f"Rad-Zählstellen in Mannheim, {str(date.today() - timedelta(days = 2))}.\n"
     
     #access zaehlstellenData-dict via location names from zaehlstellenLocations and add counts to post
     for location in zaehlstellen_location_names:

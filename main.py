@@ -36,6 +36,5 @@ except:
 content = buildStatus()
 mastodon.toot(content)
 
-
 exit()
 
